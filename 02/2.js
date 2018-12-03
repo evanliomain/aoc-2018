@@ -1,5 +1,4 @@
-const inputs = require("./first.input");
-const T = require("taninsam");
+const T = require('taninsam');
 const letterToNumber = {
   a: 1,
   b: 2,
@@ -29,31 +28,27 @@ const letterToNumber = {
   z: 26
 };
 
-process(inputs);
-
-function process(strs) {
+module.exports = function(input) {
   while (true) {
-    const [head, ...tail] = strs;
+    const [head, ...tail] = input;
     const differential = diffs(head, tail);
 
     if (0 !== differential.length) {
       const [s1, s2] = differential[0].s;
-      let res = "";
+      let res = '';
       for (let i = 0; i < s1.length; i++) {
         if (s1[i] === s2[i]) {
           res += s1[i];
         }
       }
-      console.log(res);
-      break;
+      return res;
     }
     if (0 === tail.length) {
-      console.log("Nothing found");
-      break;
+      return 'Nothing found';
     }
-    strs = tail;
+    input = tail;
   }
-}
+};
 
 function diffs(str1, strs) {
   return T.chain(strs)

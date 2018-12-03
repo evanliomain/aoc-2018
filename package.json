@@ -4,11 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./index.js --",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "taninsam": "^1.9.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.15.3",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.1"
   }
 }
