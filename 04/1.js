@@ -1,67 +1,7 @@
 const T = require('taninsam');
-const addDays = require('date-fns/add_days');
-const format = require('date-fns/format');
+const maxBy = require('../max-by');
 
-// input
-// {
-//   date: '1518-11-01',
-//   h: '00',
-//   m: 0,
-//   action: {
-//     guardShift: '#10'
-//     fallsAsleep: true
-//     wakesUp: true
-//   }
-// }[]
-
-module.exports = function(input) {
-  const planning = {};
-  let keys = [];
-  let currId;
-
-  for (const val of input) {
-    if (!T.isUndefined(val.action.guardShift)) {
-      const key = { date: val.date, id: val.action.guardShift };
-      const keyStr = getId(val.date, val.h, key.id);
-      currId = key.id;
-      if (T.isUndefined(planning[keyStr])) {
-        keys.push(keyStr);
-        planning[keyStr] = {
-          key,
-          minutes: T.arrayFromValue(60)(false)
-        };
-      }
-    }
-
-    if (
-      !T.isUndefined(val.action.fallsAsleep) ||
-      !T.isUndefined(val.action.wakesUp)
-    ) {
-      const keyStr = getId(val.date, val.h, currId);
-      // console.log(keyStr, val.m);
-      planning[keyStr].minutes[val.m] = true;
-    }
-  }
-  for (let key of keys) {
-    let cursor = planning[key].minutes[0];
-    for (let i = 1; i < planning[key].minutes.length; i++) {
-      if (!cursor) {
-        if (planning[key].minutes[i]) {
-          cursor = true;
-        } else {
-          // Nothing
-        }
-      } else {
-        if (planning[key].minutes[i]) {
-          planning[key].minutes[i] = false;
-          cursor = false;
-        } else {
-          planning[key].minutes[i] = true;
-        }
-      }
-    }
-  }
-
+module.exports = function({ planning, keys }) {
   for (let key of keys) {
     planning[key].sum = T.chain(planning[key].minutes)
       .chain(T.filter(isAsleep => isAsleep))
@@ -116,35 +56,3 @@ module.exports = function(input) {
 
   return planningMax;
 };
-
-function getId(date, h, id) {
-  if ('00' === h) {
-    return `${date} ${id}`;
-  }
-  if ('23' === h) {
-    const [y, m, d] = date.split('-');
-    let dn = parseInt(d, 10);
-    let mn = parseInt(m, 10);
-    let yn = parseInt(y, 10);
-
-    const newDate = format(addDays(new Date(yn, mn - 1, dn), 1), 'YYYY-MM-DD');
-    return `${newDate} ${id}`;
-  }
-}
-
-// Return first max items
-function maxBy(f) {
-  return arr => {
-    if (0 === arr.length) {
-      return undefined;
-    }
-    if (1 === arr.length) {
-      return arr[0];
-    }
-    const [head, ...tail] = arr;
-    return tail.reduce(
-      (acc, element) => (f(element) <= f(acc) ? acc : element),
-      head
-    );
-  };
-}
