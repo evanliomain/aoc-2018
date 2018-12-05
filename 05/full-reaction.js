@@ -4,8 +4,7 @@ const reaction = require('./reaction');
 // { c: 'a', n: 1 }[]
 
 module.exports = function(in1) {
-  let input = in1.map(x => x);
-
+  let input = in1.slice(); // copy input array to not alter it by the reaction
   let i = 0;
   let end = input.length;
 
