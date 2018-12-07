@@ -4,18 +4,13 @@ const format = require('date-fns/format');
 
 module.exports = function(input) {
   const newInput = T.chain(input)
-    .chain(T.map(x => x.split('] ')))
+    .chain(T.map(T.split('] ')))
     .chain(T.map(([time, action]) => [time.substring(1), action]))
     .chain(
       T.map(([time, action]) => {
         const [date, hm] = time.split(' ');
         const [h, m] = hm.split(':');
-        return {
-          date,
-          h,
-          m,
-          action
-        };
+        return { date, h, m, action };
       })
     )
     .chain(
@@ -31,29 +26,12 @@ module.exports = function(input) {
         if ('Guard' === first) {
           actionObj.guardShift = id;
         }
-        return {
-          date,
-          h,
-          m,
-          action: actionObj
-        };
+        return { date, h, m, action: actionObj };
       })
     )
     .chain(T.sortBy(({ date, h, m }) => `${date} ${h}:${m}`))
     .chain(T.castTo({ m: parseInt }))
     .value();
-
-  // newInput
-  // {
-  //   date: '1518-11-01',
-  //   h: '00',
-  //   m: 0,
-  //   action: {
-  //     guardShift: '#10'
-  //     fallsAsleep: true
-  //     wakesUp: true
-  //   }
-  // }[]
 
   const planning = {};
   let keys = [];

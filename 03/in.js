@@ -1,7 +1,7 @@
 const T = require('taninsam');
 
-module.exports = function(input) {
-  return T.chain(input)
+module.exports = function(in1) {
+  return T.chain(in1)
     .chain(T.map(x => x.split(' ')))
     .chain(
       T.map(([id, , coord, size]) => {
@@ -17,9 +17,7 @@ module.exports = function(input) {
         x1: x,
         y1: y,
         x2: x + w - 1,
-        y2: y + h - 1,
-        w,
-        h
+        y2: y + h - 1
       }))
     )
     .value();

@@ -1,3 +1,4 @@
+const T = require('taninsam');
 const charToNumber = {
   a: 1,
   b: 2,
@@ -54,10 +55,9 @@ const charToNumber = {
 };
 
 module.exports = function(input) {
-  const nbChar = input[0].length;
-  let result = [];
-  for (let i = 0; i < nbChar; i++) {
-    result.push({ c: input[0][i], n: charToNumber[input[0][i]] });
-  }
-  return result;
+  return T.chain(input)
+    .chain(T.head())
+    .chain(arr => Array.from(arr, (_, i) => i))
+    .chain(T.map(i => charToNumber[input[0][i]]))
+    .value();
 };

@@ -1,30 +1,16 @@
 const T = require('taninsam');
 
-const factory = {};
-
 module.exports = function(input) {
-  input.forEach(({ id, x1, y1, x2, y2, w, h }) => {
-    for (let xi = x1; xi <= x2; xi++) {
-      for (let yi = y1; yi <= y2; yi++) {
-        if (undefined === factory[`${xi}-${yi}`]) {
-          factory[`${xi}-${yi}`] = [id];
-        } else {
-          factory[`${xi}-${yi}`].push(id);
-        }
-      }
-    }
-  });
-
-  const badParts = T.chain(factory)
+  const badParts = T.chain(makeFactory(input))
     .chain(T.values())
     .chain(T.filter(x => 2 <= x.length))
     .chain(
       T.reduce((acc, arr) => {
-        for (let i = 0; i < arr.length; i++) {
-          if (undefined === acc[arr[i]]) {
-            acc[arr[i]] = true;
+        arr.forEach(element => {
+          if (undefined === acc[element]) {
+            acc[element] = true;
           }
-        }
+        });
         return acc;
       }, {})
     )
@@ -36,6 +22,24 @@ module.exports = function(input) {
     .chain(
       T.reduce((acc, id) => (badParts.includes(id) ? acc : [...acc, id]), [])
     )
-    .chain(x => x[0])
+    .chain(T.head())
+    .chain(x => x.substring(1))
     .value();
 };
+
+function makeFactory(input) {
+  const factory = {};
+
+  input.forEach(({ id, x1, y1, x2, y2, w, h }) => {
+    for (let xi = x1; xi <= x2; xi++) {
+      for (let yi = y1; yi <= y2; yi++) {
+        if (undefined === factory[`${xi}-${yi}`]) {
+          factory[`${xi}-${yi}`] = [id];
+        } else {
+          factory[`${xi}-${yi}`].push(id);
+        }
+      }
+    }
+  });
+  return factory;
+}

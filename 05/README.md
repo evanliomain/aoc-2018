@@ -15,10 +15,10 @@ For example:
 
 Now, consider a larger example, `dabAcCaCBAcCcaDA`:
 
-- `dabA cC aCBAcCcaDA The first 'cC' is removed.`
-- `dab Aa CBAcCcaDA This creates 'Aa', which is removed.`
-- `dabCBA cC caDA Either 'cC' or 'Cc' are removed (the result is the same).`
-- `dabCBAcaDA No further actions can be taken.`
+- `dabA cC aCBAcCcaDA` The first `cC` is removed.`
+- `dab Aa CBAcCcaDA` This creates `Aa`, which is removed.`
+- `dabCBA cC caDA` Either 'cC' or `Cc` are removed (the result is the same).`
+- `dabCBAcaDA` No further actions can be taken.`
 
 After all possible reactions, the resulting polymer contains 10 units.
 

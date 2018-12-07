@@ -5,7 +5,7 @@ module.exports = function({ planning, keys }) {
   for (let key of keys) {
     planning[key].sum = T.chain(planning[key].minutes)
       .chain(T.filter(isAsleep => isAsleep))
-      .chain(T.sumBy(() => 1))
+      .chain(T.length())
       .value();
   }
 
@@ -25,34 +25,17 @@ module.exports = function({ planning, keys }) {
 
   const planningMax = T.chain(planning)
     .chain(T.values())
-    .chain(T.filter(({ key }) => key.id === '#' + maxId))
+    .chain(T.filter(({ key }) => key.id === `#${maxId}`))
     .value();
 
-  const minutesRes = T.arrayFromValue(60)(0);
-
-  return T.chain(minutesRes)
+  return T.chain(T.arrayFromValue(60)(0))
     .chain(T.map((_, i) => T.sumBy(e => e.minutes[i])(planningMax)))
     .chain(
-      T.reduce(
-        (acc, e, i) => {
-          if (acc.s < e) {
-            return { m: i, s: e };
-          }
-          return acc;
-        },
-        { m: 0, s: 0 }
-      )
+      T.reduce((acc, e, i) => (acc.s < e ? { m: i, s: e } : acc), {
+        m: 0,
+        s: 0
+      })
     )
     .chain(({ m }) => m * maxId)
     .value();
-
-  // To display planning
-  // for (let key of keys) {
-  //   planning[key].key = planning[key].key.date + ' ' + planning[key].key.id;
-  //   planning[key].minutes = planning[key].minutes
-  //     .map(isAsleep => (isAsleep ? '#' : '.'))
-  //     .join('');
-  // }
-
-  return planningMax;
 };
