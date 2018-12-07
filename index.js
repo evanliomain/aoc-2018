@@ -10,6 +10,5 @@ try {
   pre = x => x;
 }
 
-console.log('day', day);
-console.log('exercice', exercice);
-console.log('result', f(pre(get(day))));
+console.log(`day: ${day} - exercice: ${exercice}`);
+console.log('result:', f(pre(get(day))));
