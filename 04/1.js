@@ -1,5 +1,4 @@
 const T = require('taninsam');
-const maxBy = require('../max-by');
 
 module.exports = function({ planning, keys }) {
   for (let key of keys) {
@@ -19,7 +18,7 @@ module.exports = function({ planning, keys }) {
   }
   const maxId = T.chain(mapIds)
     .chain(T.entries())
-    .chain(maxBy(([, s]) => s))
+    .chain(T.maxBy(([, s]) => s))
     .chain(([id]) => parseInt(id.substring(1), 10))
     .value();
 
