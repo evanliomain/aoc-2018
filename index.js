@@ -1,4 +1,5 @@
 const get = require('./input');
+const chalk = require('chalk');
 
 const [, , , day, exercice, sample] = process.argv;
 
@@ -14,6 +15,12 @@ try {
 }
 
 console.log(
-  `day: ${day} - exercice: ${exercice}` + (isSample ? ' - sample data' : '')
+  [
+    chalk.green(`day:`, chalk.bold(day)),
+    chalk.blue(`exercice:`, chalk.bold(exercice)),
+    isSample ? chalk.red('sample data') : ''
+  ]
+    .filter(x => '' !== x)
+    .join(' - ')
 );
-console.log('result:', f(pre(get(day, isSample))));
+console.log(chalk.magenta('result:'), chalk.bold(f(pre(get(day, isSample)))));
