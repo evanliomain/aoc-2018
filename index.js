@@ -1,6 +1,9 @@
 const get = require('./input');
 
-const [, , , day, exercice] = process.argv;
+const [, , , day, exercice, sample] = process.argv;
+
+const isSample = undefined !== sample;
+
 const f = require(`./${day}/${exercice}`);
 
 let pre;
@@ -10,5 +13,7 @@ try {
   pre = x => x;
 }
 
-console.log(`day: ${day} - exercice: ${exercice}`);
-console.log('result:', f(pre(get(day))));
+console.log(
+  `day: ${day} - exercice: ${exercice}` + (isSample ? ' - sample data' : '')
+);
+console.log('result:', f(pre(get(day, isSample))));
