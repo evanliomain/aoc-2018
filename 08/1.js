@@ -1,7 +1,7 @@
 const T = require('taninsam');
 
 module.exports = function(input) {
-  const { vrac } = recTruc({
+  const { vrac } = solveRec({
     tail: input.slice(),
     lifo: [],
     vrac: []
@@ -9,7 +9,7 @@ module.exports = function(input) {
   return T.sum()(vrac);
 };
 
-function recTruc({ tail, lifo, vrac }) {
+function solveRec({ tail, lifo, vrac }) {
   // Ending condition, no more food to eat
   if (0 === tail.length) {
     return { tail, lifo, vrac };
@@ -19,7 +19,7 @@ function recTruc({ tail, lifo, vrac }) {
     // My lifo is empty, let's feed it
     const [nbChildren, nbMetadata, ...tail2] = tail;
     lifo.push({ nbChildren, nbMetadata });
-    return recTruc({ tail: tail2, lifo, vrac });
+    return solveRec({ tail: tail2, lifo, vrac });
   }
 
   const last = lifo.pop();
@@ -29,7 +29,7 @@ function recTruc({ tail, lifo, vrac }) {
     lifo.push(last);
     const [nbChildren, nbMetadata, ...tail2] = tail;
     lifo.push({ nbChildren, nbMetadata });
-    return recTruc({ tail: tail2, lifo, vrac });
+    return solveRec({ tail: tail2, lifo, vrac });
   }
 
   // Extract node metadata
@@ -46,5 +46,5 @@ function recTruc({ tail, lifo, vrac }) {
     });
   }
 
-  return recTruc({ tail, lifo, vrac });
+  return solveRec({ tail, lifo, vrac });
 }

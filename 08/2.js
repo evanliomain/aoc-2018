@@ -1,11 +1,11 @@
 const T = require('taninsam');
 
 module.exports = function(input) {
-  const { tree } = recTruc({ tail: input.slice(), tree: [] });
+  const { tree } = solveRec({ tail: input.slice(), tree: [] });
   return tree[0].value;
 };
 
-function recTruc({ tail, tree }) {
+function solveRec({ tail, tree }) {
   // Ending condition, no more food to eat
   if (0 === tail.length) {
     return { tail, tree };
@@ -16,7 +16,7 @@ function recTruc({ tail, tree }) {
     const [nbChildren, nbMetadata, ...tail2] = tail;
     tree.push({ nbChildren, nbMetadata, children: [], value: 0, metadata: [] });
 
-    return recTruc({ tail: tail2, tree });
+    return solveRec({ tail: tail2, tree });
   }
 
   const node = tree[0];
@@ -31,7 +31,7 @@ function recTruc({ tail, tree }) {
 
   // Search all node children
   for (let i = 0; i < node.nbChildren; i++) {
-    const { tail: newTail, tree: child } = recTruc({ tail, tree: [] });
+    const { tail: newTail, tree: child } = solveRec({ tail, tree: [] });
     node.children.push(child);
     tail = newTail;
   }
