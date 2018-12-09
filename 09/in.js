@@ -10,5 +10,6 @@ module.exports = function(input) {
     )
     .chain(T.split('/'))
     .chain(([nbPlayers, lastMarble]) => ({ nbPlayers, lastMarble }))
+    .chain(T.castTo({ nbPlayers: parseInt, lastMarble: parseInt }))
     .value();
 };
