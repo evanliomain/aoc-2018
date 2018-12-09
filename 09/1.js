@@ -1,7 +1,13 @@
 const T = require('taninsam');
+const chalk = require('chalk');
 
 module.exports = function({ nbPlayers, lastMarble }) {
-  console.log('nbPlayers', nbPlayers, 'lastMarble', lastMarble);
+  console.log(
+    chalk.bold(nbPlayers),
+    'players -',
+    chalk.bold(lastMarble),
+    'marbles'
+  );
 
   const circleList = {
     0: {
