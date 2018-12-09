@@ -23,4 +23,14 @@ console.log(
     .filter(x => '' !== x)
     .join(' - ')
 );
-console.log(chalk.magenta('result:'), chalk.bold(f(pre(get(day, isSample)))));
+
+const result = f(pre(get(day, isSample)));
+
+if (typeof result === 'object') {
+  console.log(
+    chalk.magenta('result:'),
+    chalk.bold(JSON.stringify(result, (_, v) => v, 2))
+  );
+} else {
+  console.log(chalk.magenta('result:'), chalk.bold(result));
+}
