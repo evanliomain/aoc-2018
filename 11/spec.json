@@ -1,0 +1,85 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v3.0.json",
+  "width": 500,
+  "height": 500,
+  "autosize": "pad",
+  "data": [
+    {
+      "name": "source",
+      "transform": [
+        { "type": "sequence", "start": 0, "stop": 90000 },
+        { "type": "formula", "as": "x", "expr": "datum.data % size" },
+        { "type": "formula", "as": "y", "expr": "floor(datum.data / size)" },
+        { "type": "formula", "as": "x", "expr": "datum.x + 1" },
+        { "type": "formula", "as": "y", "expr": "datum.y" },
+        { "type": "collect", "sort": { "field": ["y", "x"] } }
+      ]
+    },
+    {
+      "name": "table",
+      "source": "source",
+      "transform": [
+        {
+          "type": "formula",
+          "as": "value",
+          "expr": "((datum.x + 10) * datum.y + serial) * (datum.x + 10)"
+        },
+        {
+          "type": "formula",
+          "as": "value",
+          "expr": "((datum.value - (datum.value % 100)) / 100) % 10 - 5"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "xScale",
+      "type": "band",
+      "domain": { "data": "table", "field": "x" },
+      "range": "width"
+    },
+    {
+      "name": "yScale",
+      "type": "band",
+      "domain": { "data": "table", "field": "y" },
+      "range": "height"
+    },
+    {
+      "name": "colorScale",
+      "type": "ordinal",
+      "domain": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4],
+      "range": { "scheme": "redyellowgreen" }
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {
+        "data": "table"
+      },
+      "encode": {
+        "update": {
+          "x": { "field": "x", "scale": "xScale" },
+          "y": { "field": "y", "scale": "yScale" },
+          "width": { "scale": "xScale", "band": 1 },
+          "height": { "scale": "yScale", "band": 1 },
+          "fill": { "scale": "colorScale", "field": "value" }
+        }
+      }
+    }
+  ],
+  "axes": [],
+  "legends": [
+    {
+      "type": "symbol",
+      "fill": "colorScale",
+      "orient": "top",
+      "direction": "horizontal"
+    }
+  ],
+  "signals": [
+    { "name": "size", "value": 300 },
+    { "name": "serial", "value": 5535 }
+  ]
+}
