@@ -1,22 +1,19 @@
 const T = require('taninsam');
+const fs = require('fs');
+
+const MAX_GENERATION = 1000; //50000000000;
 
 module.exports = function({ initialState, rules }) {
-  // console.log(
-  //   T.chain(initialState)
-  //     .chain(T.keys())
-  //     .chain(T.map(x => parseInt(x, 10)))
-  //     .chain(T.sortBy(x => x))
-  //     .value()
-  // );
-
   const nexter = nextGen(matchPattern(rules));
   let state = initialState;
   console.log(0, joinPots(state), sum(state));
-  for (let i = 1; i <= 20; i++) {
+  let print = '';
+  for (let i = 1; i <= MAX_GENERATION; i++) {
     state = nexter(state);
-    console.log(i, joinPots(state), sum(state));
+    print += joinPots(state) + '\n';
   }
-  // console.log(joinPots(state));
+
+  // fs.writeFileSync(`./output/12-${MAX_GENERATION}.txt`, print);
 
   return sum(state);
 };
@@ -78,7 +75,7 @@ function nextGen(matcher) {
     }
 
     for (let current = first; current <= last; current++) {
-      let cur = pots[current];
+      const cur = pots[current];
       let previous = pots[current - 1];
       let pprevious = pots[current - 2];
       let next = pots[current + 1];
@@ -99,6 +96,21 @@ function nextGen(matcher) {
         nnext = '.';
       }
       nextPots[current] = matcher(pprevious + previous + cur + next + nnext);
+    }
+
+    // Ellagage: need to improve perf significantly
+    const newFirst = getFirst(nextPots);
+    const newLast = getLast(nextPots);
+
+    let current = newFirst;
+    for (; current <= newLast; current++) {
+      const cur = nextPots[current];
+      if ('#' === cur) {
+        break;
+      }
+    }
+    for (let i = newFirst; i < current; i++) {
+      delete nextPots[i];
     }
 
     return nextPots;
