@@ -1,6 +1,8 @@
 const T = require('taninsam');
 
 module.exports = function(input) {
+  console.log(input);
+
   let firstFreq = 0;
   let firstFreqObj = {};
   let i = 0;
@@ -12,6 +14,8 @@ module.exports = function(input) {
           T.reduce(
             ({ res, freq }, input) => {
               const tmp = input + res;
+              console.log(tmp);
+
               if (freq[tmp]) {
                 throw Error(tmp);
               }
