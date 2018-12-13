@@ -1,8 +1,7 @@
-const T = require('taninsam');
 const { tick } = require('./utils');
 
 module.exports = function({ circuit, carts }) {
-  const next = tick(circuit);
+  const next = tick(circuit, true);
   try {
     while (true) {
       carts = next(carts);

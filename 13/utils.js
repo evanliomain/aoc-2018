@@ -1,5 +1,5 @@
 const T = require('taninsam');
-module.exports = { tick, tick2 };
+module.exports = { tick };
 
 function printCircuit(circuit) {
   return T.chain(circuit)
@@ -8,27 +8,8 @@ function printCircuit(circuit) {
     .chain(s => '\n' + s)
     .value();
 }
-function tick(circuit) {
-  const move = moveCart(circuit);
-  const rowLength = circuit[0].length;
-  return inputCarts => {
-    let carts = T.sortBy(({ x, y }) => x + y * rowLength)(inputCarts);
-    const carCrash = {};
-    for (let i = 0; i < carts.length; i++) {
-      const cart = move(carts[i]);
-      const coords = `${cart.x},${cart.y}`;
-      if (undefined !== carCrash[coords]) {
-        // A cart crash into another one
-        throw new Error(`Carts crashes at ${coords}`);
-      }
-      carCrash[coords] = 1;
-      carts[i] = cart;
-    }
-    return carts;
-  };
-}
 
-function tick2(circuit) {
+function tick(circuit, endIfCrash = false) {
   const move = moveCart(circuit);
   const rowLength = circuit[0].length;
   return inputCarts => {
@@ -50,6 +31,10 @@ function tick2(circuit) {
       const coords = `${cart.x},${cart.y}`;
       if (undefined !== carCrash[coords]) {
         // A cart crash into another one
+        if (endIfCrash) {
+          // A cart crash into another one
+          throw new Error(`Carts crashes at ${coords}`);
+        }
         // Lets mark them to remove
         carts[i] = 'TO_REMOVE';
         carts[carCrash[coords]] = 'TO_REMOVE';
@@ -79,6 +64,10 @@ function getCellFromCircuit(circuit) {
   return ({ x, y }) => circuit[y][x];
 }
 
+/**
+ * Move a cart to its next position.
+ * Quite boring to read. It's just rules describe into the problem.
+ */
 function moveCart(circuit) {
   const getCell = getCellFromCircuit(circuit);
   return cart => {

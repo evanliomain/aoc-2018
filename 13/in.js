@@ -9,7 +9,7 @@ module.exports = function(input) {
       T.map((row, y) =>
         row.map((cell, x) => {
           if ('>' === cell || '<' === cell || '^' === cell || 'v' === cell) {
-            carts.push({ direction: cell, x, y, counter: 0, i });
+            carts.push({ direction: cell, x, y, counter: 0 });
             i++;
           }
           if ('>' === cell || '<' === cell) {
