@@ -1,6 +1,5 @@
 const T = require('taninsam');
-const addDays = require('date-fns/add_days');
-const format = require('date-fns/format');
+const { addDays, format } = require('date-fns/fp');
 
 module.exports = function(input) {
   const newInput = T.chain(input)
@@ -95,8 +94,8 @@ function getId(date, h, id) {
         y: parseInt(y, 10)
       }))
       .chain(({ y, m, d }) => new Date(y, m - 1, d))
-      .chain(d => addDays(d, 1))
-      .chain(d => format(d, 'YYYY-MM-DD'))
+      .chain(addDays(1))
+      .chain(format('uu-LL-dd'))
       .chain(newDate => `${newDate} ${id}`)
       .value();
   }
