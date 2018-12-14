@@ -23,8 +23,9 @@ console.log(
     .filter(x => '' !== x)
     .join(' - ')
 );
-
+console.time('solving in');
 const result = f(pre(get(day, isSample)));
+console.timeEnd('solving in');
 
 if (typeof result === 'object') {
   console.log(
