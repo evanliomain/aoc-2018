@@ -15,7 +15,9 @@ describe('14', () => {
   });
 
   it('solve 2', () => {
-    // expect(solve2(sample)).toMatchInlineSnapshot();
-    // expect(solve2(input)).toMatchInlineSnapshot();
+    expect(solve2('51589')).toEqual(9);
+    expect(solve2('01245')).toEqual(5);
+    expect(solve2('92510')).toEqual(18);
+    expect(solve2('59414')).toEqual(2018);
   });
 });
