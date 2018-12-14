@@ -2,7 +2,7 @@ const T = require('taninsam');
 
 module.exports = { getNextStep };
 
-function getNextStep(recipes, current1, current2) {
+function getNextStep({ recipes, current1, current2 }) {
   recipes.push(...getNewRecipes(recipes, current1, current2));
   let { current1: ncurrent1, current2: ncurrent2 } = getNewCurrentRecipes(
     recipes,
