@@ -30,7 +30,7 @@ module.exports = function(input) {
 function makeFactory(input) {
   const factory = {};
 
-  input.forEach(({ id, x1, y1, x2, y2, w, h }) => {
+  input.forEach(({ id, x1, y1, x2, y2 }) => {
     for (let xi = x1; xi <= x2; xi++) {
       for (let yi = y1; yi <= y2; yi++) {
         if (undefined === factory[`${xi}-${yi}`]) {

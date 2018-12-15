@@ -1,11 +1,8 @@
 const T = require('taninsam');
 
 module.exports = function(input) {
-  console.log(input);
-
   let firstFreq = 0;
   let firstFreqObj = {};
-  let i = 0;
 
   try {
     while (true) {
