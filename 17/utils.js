@@ -8,7 +8,8 @@ module.exports = {
   write,
   countWater,
   countFixWater,
-  get
+  get,
+  flowOfWater
 };
 
 function getBounds(input) {
@@ -27,11 +28,13 @@ function getBounds(input) {
     .chain(T.values())
     .chain(T.map(({ x }) => x))
     .chain(T.max())
+    .chain(x => x + 1)
     .value();
   const X_MIN = T.chain(input)
     .chain(T.values())
     .chain(T.map(({ x }) => x))
     .chain(T.min())
+    .chain(x => x - 1)
     .value();
 
   return { X_MIN, X_MAX, Y_MIN, Y_MAX };
@@ -40,12 +43,12 @@ function getBounds(input) {
 function makeMatrix(input) {
   const { X_MIN, X_MAX, Y_MIN, Y_MAX } = getBounds(input);
   const matrix = [];
-  for (let y = 0; y <= Y_MAX; y++) {
+  for (let y = Y_MIN - 1; y <= Y_MAX; y++) {
     const row = [];
     for (let x = X_MIN; x <= X_MAX; x++) {
-      if (500 === x && 0 === y) {
+      if (500 === x && Y_MIN - 1 === y) {
         row.push('+');
-      } else if (500 === x && 1 === y) {
+      } else if (500 === x && Y_MIN === y) {
         row.push('|');
       } else if (undefined !== input[`${x},${y}`]) {
         row.push('#');
@@ -91,4 +94,67 @@ function get(matrix, y, x) {
     return null;
   }
   return matrix[y][x];
+}
+
+function flowOfWater(matrix) {
+  let flow;
+
+  do {
+    flow = false;
+    matrix.forEach((row, y) => {
+      row.forEach((cell, x) => {
+        if ('|' !== cell) {
+          return;
+        }
+
+        if ('.' === get(matrix, y + 1, x)) {
+          // Water fall
+          matrix[y + 1][x] = '|';
+          flow = true;
+        }
+        if ('#' === get(matrix, y + 1, x) || '~' === get(matrix, y + 1, x)) {
+          // Water flow
+          if ('.' === get(matrix, y, x - 1)) {
+            matrix[y][x - 1] = '|';
+            flow = true;
+          }
+          if ('.' === get(matrix, y, x + 1)) {
+            matrix[y][x + 1] = '|';
+            flow = true;
+          }
+        }
+
+        // Replace #|||||||# by #~~~~~~~#
+        if (
+          '#' === get(matrix, y, x - 1) &&
+          ('#' === get(matrix, y + 1, x) || '~' === get(matrix, y + 1, x))
+        ) {
+          let waterfall = true;
+          let continuous = true;
+          let i = x + 1;
+          while (waterfall) {
+            switch (get(matrix, y, i)) {
+              case '|':
+                break;
+              case '#':
+                waterfall = false;
+                break;
+              case '.':
+                continuous = false;
+                waterfall = false;
+                break;
+            }
+            i++;
+          }
+          if (continuous) {
+            for (let j = x; j < i - 1; j++) {
+              matrix[y][j] = '~';
+            }
+            flow = true;
+          }
+        }
+      });
+    });
+  } while (flow);
+  return matrix;
 }
